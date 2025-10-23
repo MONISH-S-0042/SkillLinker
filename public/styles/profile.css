@@ -16,3 +16,15 @@
     margin: 10px auto;
     object-fit: cover;
 }
+.connect-icons{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.connect-icons a{
+    flex-basis: 20%;
+    font-size: xx-large;
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 10px;
+}

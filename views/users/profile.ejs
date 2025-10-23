@@ -98,6 +98,28 @@
                 </table>
             </div>
         </div>
+        <% if(user.connect && (user.connect.instagram || user.connect.email || user.connect.github || user.connect.linkedin)) {%>
+            <div class="row">
+            <div class="col-md-4 text-center fw-bolder fs-3">Contact Me:</div>
+            <div class="col-md-8">
+                <div class="connect-icons">
+            <% if(user.connect.instagram) {%>
+                <a href=<%= user.connect.instagram %> target="_blank" style="color: #E4405F;">
+                    <i class="fab fa-instagram"></i></a>
+            <% } if(user.connect.linkedin) {%>
+                <a href=<%= user.connect.linkedin %> target="_blank" style="color: #0A66C2;">
+                    <i class="fab fa-linkedin"></i></a>
+                    <% }if(user.connect.email) {%>
+                <a href="mailto:<%= user.connect.email %>" style="color: #D44638;">
+                    <i class="fas fa-envelope"></i></a>
+                    <% }if(user.connect.github) {%>
+                <a href=<%= user.connect.github %> target="_blank" style="color: #181717;"> 
+                    <i class="fab fa-github"></i></a>
+                    <% } %></div>
+            </div>
+        </div>
+            <% } %>
+
 <% if(user.equals(currentUser)) {%>
         <div class=" row">
                                                 <div class="col-4 offset-8">

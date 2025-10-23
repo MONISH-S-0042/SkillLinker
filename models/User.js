@@ -1,7 +1,25 @@
 const { type } = require('express/lib/response');
 const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
-const {cloudinary} = require('../cloudinary/index')
+const { cloudinary } = require('../cloudinary/index')
+const connect = {
+    email: {
+        type: String,
+        lowercase: true
+    },
+    github: {
+        type: String,
+        lowercase: true
+    },
+    instagram: {
+        type: String,
+        lowercase: true
+    },
+    linkedin: {
+        type: String,
+        lowercase: true
+    }
+}
 const userSchema = new mongoose.Schema({
     FullName: String,//Full name and username are not same, in passport username and password are stored default
     email: {
@@ -14,7 +32,14 @@ const userSchema = new mongoose.Schema({
         enum: ['seeker', 'poster'],
         default: 'seeker'
     },
-    skills: [String],
+    skills: {
+        type: [{
+            type: String,
+            lowercase: true,
+            trim: true
+        }],
+        default: ['None']
+    },
     resume: {
         url: {
             type: String
@@ -43,15 +68,16 @@ const userSchema = new mongoose.Schema({
     company_name: {
         type: String,
     },
-    job_category:{
-        type:String,
-        required:function(){
-            return this.role==='seeker';
+    job_category: {
+        type: String,
+        required: function () {
+            return this.role === 'seeker';
         },
-        default:function(){
-            return this.role==='seeker'?'general':undefined;
+        default: function () {
+            return this.role === 'seeker' ? 'general' : undefined;
         }
-    }
+    },
+    connect: connect
 })
 userSchema.plugin(passportLocalMongoose);
 module.exports.User = mongoose.model('User', userSchema);

@@ -14,6 +14,7 @@
                         data-popup-target="#profile-<%= application.applicant._id %>">
                         Name: <%= application.applicant.FullName || application.applicant.username %>
                     </h5>
+                    
                     <% if(application.approval_status!=='approved' ) {%>
                         <button type="button" data-close-class=".close-<%= application.applicant._id %>"
                             class="align-self-end close-button btn btn-light fw-bold">
@@ -28,9 +29,9 @@
                 <div class="row py-2">
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h5 class="card-title">Skills</h5>
-                            <p class="card-text">
-                                <%= application.applicant.skills?.join(', ') %></p>
+                            <h5 class="mb-0 fw-bold <%= application.matchedSkills>0?'text-primary':'text-danger'%> ">Matched Skills:<%= application.matchedSkills %> </h5>
+                            <p class="card-text">   
+                            <h5 class="card-title">Skills</h5><%= application.applicant.skills?.join(', ') %></p>
                         </div>
                         </div>
                         <div class="col-md-4 d-flex flex-row justify-content-evenly align-items-end">

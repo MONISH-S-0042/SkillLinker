@@ -86,6 +86,17 @@ module.exports.viewJobApplications = async (req, res) => {
     let applications = (await Application.find({ job: job._id }).populate('applicant')
         .sort({ approval_status: 1, applied: -1 }))
         .filter(app => app.approval_status !== 'rejected');
+    let req_skills = job.req_skills;
+    applications.forEach(application => {
+        application.matchedSkills = 0;
+        req_skills.forEach(skill => {
+            application.matchedSkills += application.applicant?.skills.includes(skill) ? 1 : 0;
+        })
+    });
+    applications.sort((a, b) => {
+        if(a.approval_status!=b.approval_status)return a.approval_status-b.approval_status;
+        return b.matchedSkills-a.matchedSkills;
+    });
     const job_app_length = applications.filter(application => application.approval_status === 'approved').length;
     const pend_apps = applications.filter(application => application.approval_status === 'pending').length;
     const users = applications.map(application => application.applicant);

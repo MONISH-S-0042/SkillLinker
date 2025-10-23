@@ -15,6 +15,6 @@ for(let btn of statusBtns){
         const[action,id]=btn.id.split('-');
         if(action==='acc'|| action==='close' || action==='rejectAll'){
             setTimeout(()=>window.location.reload(),300);
-        }
+        } 
     })
 }

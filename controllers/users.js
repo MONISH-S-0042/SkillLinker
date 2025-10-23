@@ -19,14 +19,20 @@ module.exports.editProfilePageForm = async (req, res) => {
 };
 
 module.exports.editProfilePage = async (req, res) => {
-    const { name, DOB, gender, company_name } = req.body;
-    const updateData = { DOB, FullName: name };
+    const { name, DOB, gender, company_name, instagram,email,github,linkedin } = req.body;
+    const connect={
+        email,
+        github,
+        instagram,
+        linkedin
+    }
+    const updateData = { DOB, FullName: name,connect };
     if (req.user.role === 'seeker' && req.body.skillsStr) {
         const skillsStr = req.body.skillsStr;
         const skills = skillsStr?.split(",")
             .map(el => el.trim())
             .filter(el => el.length > 0);
-        updateData.skills=skills;
+        updateData.skills = skills;
     }
     if (req.files && req.files.profilePic) {
         updateData.profilePic = {
@@ -103,13 +109,13 @@ module.exports.logout = async (req, res) => {
         res.redirect('/');
     })
 };
-module.exports.deleteNotification=async(req,res)=>{
-    const {notifyId}=req.params;
-    await Notification.findOneAndDelete({user:req.user._id,_id:notifyId});
-    req.flash('success','Notification deleted permanently');
+module.exports.deleteNotification = async (req, res) => {
+    const { notifyId } = req.params;
+    await Notification.findOneAndDelete({ user: req.user._id, _id: notifyId });
+    req.flash('success', 'Notification deleted permanently');
     res.redirect('/notification');
 }
-module.exports.notification=async(req,res)=>{
-    const notifications=await Notification.find({user:req.user._id}).sort({created:-1});
-    res.render('users/notification',{notifications});
+module.exports.notification = async (req, res) => {
+    const notifications = await Notification.find({ user: req.user._id }).sort({ created: -1 });
+    res.render('users/notification', { notifications });
 }

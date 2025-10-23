@@ -25,9 +25,12 @@
         </div>
         <!-- Job Details -->
         <div class="card-body p-5">
-            <h3 class="fw-bold text-center mb-4 text-primary">
+            <h3 class="fw-bold text-center mb-2 text-primary">
                 <%= job.title %> Required
             </h3>
+            <h4 class="fw-bold text-center mb-4 <%= job.matchedSkills?'text-dark':'text-danger' %>">
+                (<%= job.matchedSkills %> Skills matched)
+            </h4>
 
             <div class="mb-4">
                 <h5 class="fw-bold">Description</h5>

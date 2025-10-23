@@ -1,5 +1,6 @@
 const { Job } = require('../models/Job');
 const { Application } = require('../models/Application');
+const { User } = require('../models/User');
 
 module.exports.getJobList = async (req, res) => {
     res.render('seeker/jobs');
@@ -11,6 +12,11 @@ module.exports.getJobDetails = async (req, res) => {
         return res.redirect('/seeker/getJobs');
     }
     const application = await Application.findOne({ job: job._id, applicant: req.user._id });
+    const skills = (await User.findById(req.user._id)).skills;
+    job.matchedSkills = 0;
+    job.req_skills.forEach(skill => {
+        job.matchedSkills += skills.includes(skill) ? 1 : 0;
+    });
     res.render('seeker/showJob', { job, application });
 }
 module.exports.applyJob = async (req, res) => {

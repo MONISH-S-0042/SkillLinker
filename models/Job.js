@@ -22,7 +22,11 @@ const jobSchema = new mongoose.Schema({
         min: 0
     },
     req_skills: {
-        type: [String],
+        type: [{
+            type: String,
+            lowercase: true,
+            trim: true
+        }],
         default: ['None']
     },
     category: {

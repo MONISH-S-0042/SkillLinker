@@ -19,8 +19,8 @@
                     <div class="col-md-4 text-center">
                         <div data-popup-target="#popup-profile"
                             id="<%= user.profilePic.url === '/images/person-icon.jpeg' ? '' : 'popup-trigger' %>">
-                            <img src="<%= user.profilePic.url || '/images/person-icon.jpeg' %>"
-                                alt="profile" class="profile-pic">
+                            <img src="<%= user.profilePic.url || '/images/person-icon.jpeg' %>" alt="profile"
+                                class="profile-pic">
                         </div>
 
                         <p class="text-secondary small mb-1">
@@ -29,8 +29,7 @@
                         </p>
 
                         <% if (user.resume && user.resume.url) { %>
-                            <a href="<%= user.resume.url %>"
-                                class="badge text-bg-info text-decoration-none">
+                            <a href="<%= user.resume.url %>" class="badge text-bg-info text-decoration-none">
                                 Download <br> Resume
                             </a>
                             <% } %>
@@ -43,15 +42,13 @@
                                 <tr>
                                     <th scope="row" style="width: 150px;">Name</th>
                                     <td>
-                                        <%= (user.FullName || user.username
-                                            || 'Not provided' ).trim() %>
+                                        <%= (user.FullName || user.username || 'Not provided' ).trim() %>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th scope="row">DOB</th>
                                     <td>
-                                        <%= user.DOB ?
-                                            user.DOB.toISOString().split('T')[0] : 'Not provided' %>
+                                        <%= user.DOB ? user.DOB.toISOString().split('T')[0] : 'Not provided' %>
                                     </td>
                                 </tr>
                                 <tr>
@@ -63,17 +60,37 @@
                                 <tr>
                                     <th scope="row">Skills</th>
                                     <td>
-                                        <%= user.skills && user.skills.length ?
-                                            user.skills.join(", ") 
+                                        <%= user.skills && user.skills.length ? user.skills.join(", ") 
                                                 : 'No skills added' %>
                                     </td>
                                 </tr>
+                                
                             </tbody>
                         </table>
                     </div>
                 </div>
-
+ <% if(user.connect && (user.connect.instagram || user.connect.email || user.connect.github || user.connect.linkedin)) {%>
+            <div class="row align-items-center">
+            <div class="col-md-4 text-center fw-bolder fs-5 ">Contacts:</div>
+            <div class="col-md-8">
+                <div class="connect-icons">
+            <% if(user.connect.instagram) {%>
+                <a href=<%= user.connect.instagram %> target="_blank" style="color: #E4405F;">
+                    <i class="fab fa-instagram"></i></a>
+            <% } if(user.connect.linkedin) {%>
+                <a href=<%= user.connect.linkedin %> target="_blank" style="color: #0A66C2;">
+                    <i class="fab fa-linkedin"></i></a>
+                    <% }if(user.connect.email) {%>
+                <a href="mailto:<%= user.connect.email %>" style="color: #D44638;">
+                    <i class="fas fa-envelope"></i></a>
+                    <% }if(user.connect.github) {%>
+                <a href=<%= user.connect.github %> target="_blank" style="color: #181717;"> 
+                    <i class="fab fa-github"></i></a>
+                    <% } %></div>
             </div>
         </div>
-    </div>
-<% } %>
+            <% } %>
+                </div>
+            </div>
+        </div>
+        <% } %>

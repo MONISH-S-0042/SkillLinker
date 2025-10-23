@@ -65,6 +65,35 @@
                                                         value="<%= user.DOB?.toISOString().split('T')[0]||'' %>"
                                                         required>
                                                 </div>
+                                                <h4>Add Your contacts(Optional)</h4>
+                                                <div class="row">
+                                                    <div class="mb-3 col-md-6">
+                                                        <label class="form-label" for="email">Email:</label>
+                                                        <input class="form-control" type="email" name="email"
+                                                            placeholder="add mail-id" id="email"
+                                                            value="<%= user.connect.email||'' %>">
+                                                    </div>
+                                                    <div class="mb-3 col-md-6">
+                                                        <label class="form-label" for="instagram">Instagram:</label>
+                                                        <input class="form-control" type="text" name="instagram"
+                                                            placeholder="add url" id="instagram"
+                                                            value="<%= user.connect.instagram||'' %>">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="mb-3 col-md-6">
+                                                        <label class="form-label" for="github">Github:</label>
+                                                        <input class="form-control" type="text" name="github"
+                                                            placeholder="add url" id="github"
+                                                            value="<%= user.connect.github||'' %>">
+                                                    </div>
+                                                    <div class="mb-3 col-md-6">
+                                                        <label class="form-label" for="linkedin">LinkedIn:</label>
+                                                        <input class="form-control" type="text" name="linkedin"
+                                                            placeholder="add url" id="linkedin"
+                                                            value="<%= user.connect.linkedin||'' %>">
+                                                    </div>
+                                                </div>
                                                 <div class="row">
                                                     <div class="col-5">
                                                         <a href="/<%= currentUser._id %>/profile"> <button type="button"
