@@ -1,0 +1,180 @@
+<%- layout('/layout/boilerplate') %>
+    <div class="container col-8 offset-2 my-5 shadow-lg"
+        style="background-color: rgb(255, 255, 255);border-radius: 0.5em;">
+        <h1 class="text-center py-3 my-3">Job Description Form</h1>
+
+        <form action="/poster/addJob" method="POST" class="validate-form" novalidate>
+            <table class="table">
+                <tr>
+                    <th scope="row">
+                        <label for="title">Job title</label>
+                    </th>
+                    <td>
+                        <input type="text" id="title" name="title" placeholder="title" class="form-control" required
+                            autocorrect="on" />
+                    </td>
+                </tr>
+                <tr id="posted_job_category">
+                    <th scope="row">
+                        <label for="title">Job Category</label>
+                    </th>
+                    <td>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <select name="available_category" id="available_category" class="form-control" required>
+                                    <option value="" class="start">--Select Category--</option>
+                                    <option value="other">--other--</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <button type="button" class="btn btn-sm btn-dark" id="get_category_btn">Get
+                                    Category</button>
+                            </div>
+                        </div>
+                        <input type="text" id="category" name="category" placeholder="Select/Type new Category"
+                            class="form-control mt-2" autocorrect="on" />
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="description">Job Description</label>
+                    </th>
+                    <td>
+                        <textarea id="description" name="description" autocorrect="on" class="form-control"
+                            placeholder="Enter the job description" required></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="skills">Required Skills</label>
+                    </th>
+                    <td>
+                        <input type="text" id="skills" name="skills" placeholder="skills" class="form-control">
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="mode">Work location</label>
+                    </th>
+                    <td>
+                        <select name="modeType" id="mode" class="form-control" required>
+                            <option value="">--Select--</option>
+                            <option value="remote">Remote</option>
+                            <option value="on-site">On-Site</option>
+                        </select>
+                        <input type="text" placeholder="enter address" class="form-control address my-2" name="address"
+                            style="display: none;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" colspan="2">
+                        <div class="row g-3">
+                            <!-- Duration -->
+                            <div class="col-md-8">
+                                <label for="duration" class="form-label">Job Duration</label>
+                                <div id="duration" class="d-flex align-items-center">
+                                    <label for="from">From:</label>
+                                    <input type="date" id="from" name="durationFrom" class="form-control">
+                                    <label for="to">To:</label>
+                                    <input type="date" id="to" name="durationTo" class="form-control">
+                                </div>
+                            </div>
+
+                            <!-- Pay -->
+                            <div class="col-md-4">
+                                <label for="pay" class="form-label">Pay per Hour</label>
+                                <div class="input-group">
+                                    <div class="input-group-text">$</div>
+                                    <input type="number" id="pay" name="pay" placeholder="min-1" min="1"
+                                        class="form-control" required />
+                                </div>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+
+                <tr>
+                    <th scope="row" colspan="2">
+                        <div class="row g-3">
+                            <!-- Max Applicants -->
+                            <div class="col-md-6">
+                                <label for="max_applicants" class="form-label">Maximum applications</label>
+                                <input type="number" id="max_applicants" name="max_applicants" placeholder="default-100"
+                                    min="1" class="form-control" />
+                            </div>
+
+                            <!-- Deadline -->
+                            <div class="col-md-6">
+                                <label for="deadline" class="form-label">Deadline</label>
+                                <input type="datetime-local" id="deadline" name="deadline" class="form-control"
+                                    required />
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+
+                <tr>
+                    <td>
+                        <a href="/home">
+                            <button class="btn btn-warning" type="button">Cancel</button>
+                        </a>
+                    </td>
+                    <td class="text-end">
+                        <button class="btn btn-success" type="submit">Add Job</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const mode = document.querySelector('#mode');
+            const addressField = document.querySelector('.address');
+
+            if (mode && addressField) {
+                mode.addEventListener('change', () => {
+                    if (mode.value === 'on-site') {
+                        addressField.style.display = 'block';
+                        addressField.required = true;
+                    }
+                    else {
+                        addressField.style.display = 'none';
+                        addressField.required = false;
+                    }
+
+                });
+            }
+            const categorySelector = document.querySelector('#available_category');
+            const categoryIp = document.querySelector('#category');
+            categoryIp.style.display = 'none';
+            const title = document.querySelector('#title');
+            const categoryJson = await fetch(`/api/getCategory?title=${title.value}`);
+            const res = await categoryJson.json();
+            const catBtn = document.querySelector('#get_category_btn');
+            for (let el of res.all_categories) {
+                const op = document.createElement('option');
+                op.value = el.category;
+                op.innerText = el.category;
+                document.querySelector('.start').after(op);
+            }
+            catBtn.addEventListener('click', async () => {
+                const categoryJson = await fetch(`/api/getCategory?title=${title.value}`);
+                const res = await categoryJson.json();
+                categorySelector.value = res.category;
+                categorySelector.dispatchEvent(new Event('change'));
+                console.log(res.category);
+            })
+            categorySelector.addEventListener('change', () => {
+                if (categorySelector.value === 'other') {
+                    categoryIp.required = 'true';
+                    categoryIp.style.display = 'block'
+                }
+                else {
+                    categoryIp.value = categorySelector.value;
+                    categoryIp.required = 'false';
+                    categoryIp.style.display = 'none';
+                }
+            })
+        });
+    </script>
+    </style>

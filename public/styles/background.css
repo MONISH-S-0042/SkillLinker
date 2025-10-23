@@ -1,0 +1,26 @@
+* {
+  transition: 
+    background-color 500ms,
+    border 300ms,
+    color 100ms,
+    transform 300ms ease,
+    visibility 0ms 300ms;
+}
+
+.active-link {
+    background: rgb(131, 171, 211);
+    color: white;
+}
+
+.form-background {
+    background: linear-gradient(to right, #74ebd5, #ACB6E5);
+}
+.card.text-center:hover{
+    transform: scale(1.05);
+}
+.hover:hover{
+    transform: scale(1.03);
+}
+a:hover,.btn:hover{
+    transform: scale(1.1) translateY(-2px);
+}

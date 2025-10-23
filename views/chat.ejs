@@ -1,0 +1,244 @@
+<%- layout('/layout/boilerplate.ejs') %>
+    <div class="div container-fluid mx-auto mt-4 bg-light px-0 rounded"
+        style="height: 80vh;overflow-x: hidden;width: 85%;position: fixed;
+         left: 7%;right: 7%;z-index: 100; display: flex;">
+        <div id="user-container" style="width: 30%; border-right: 1px solid #ccc; overflow-y: auto; padding: 10px;">
+            <h2 class="border-bottom text-center">
+                <%= name %>(me)
+            </h2>
+            <div class="room-list my-4">
+
+            </div>
+        </div>
+
+        <div id="chat-container" style="width: 70%;margin:0; position: relative;">
+            <button class="current-messager text-center fs-4">
+
+            </button>
+            <div id="message-container" class="px-2 pt-2"></div>
+
+            <form id="send-container" style="position: absolute; bottom: 0; left: 0; right: 0; height: 60px; display: flex;
+             padding: 5px; background: #f8f9fa;">
+                <input type="text" id="message-input" style="flex: 1; padding: 10px; margin-right: 5px;">
+                <button type="submit" id="send-btn">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        #message-container {
+            padding-bottom: 50px;
+            max-height: calc(80vh - 80px);
+            overflow-y: scroll;
+        }
+
+        #send-container input {
+            width: 80%;
+            padding: 10px;
+        }
+
+        #send-container button {
+            width: 18%;
+            padding: 10px;
+        }
+
+        .current-messager {
+            width: 100%;
+            font-weight: bolder;
+            background-color: rgb(255, 206, 145);
+            text-transform: capitalize;
+            padding: 20px 0;
+        }
+
+        .room-list {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            overflow-y: scroll;
+        }
+
+        .chat-users {
+            background-color: rgb(251, 226, 188);
+            font-size: large;
+            border: none;
+            font-weight: bold;
+            height: 40px;
+        }
+
+        .chat-users.selected-user {
+            background-color: rgb(255, 210, 142);
+            border: 2px solid;
+        }
+
+        /* Append message function */
+        .msg-content-container {
+            margin: 5px 0;
+        }
+
+        .msg-content-container p {
+            width: max-content;
+            padding: 5px 5px;
+            border: 2px solid black;
+            border-radius: 1em;
+            color: white;
+            font-weight: bold;
+            border-top-left-radius: 0;
+            background-color: rgb(114, 114, 244);
+        }
+
+        .msg-content-container p.my-message {
+            border-top-left-radius: 1em;
+            border-bottom-right-radius: 0;
+            margin-left: auto;
+            color: black;
+            background-color: rgb(255, 255, 255);
+        }
+    </style>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+    <script>
+        const createRoom = (user1, user2) => {
+            return [user1, user2].sort().join('_');
+        }
+        const formatMsg = (msg) => {
+            return {
+                username: myName,
+                message: msg,
+                time: moment().format('hh:mm a')
+            }
+        }
+        const isEqualArrays = (arr1, arr2) => {
+            if (arr1.length !== arr2.length) return false;
+            return arr1.every(el => arr2.includes(el));
+        };
+
+
+    </script>
+    <script>
+        let prevRooms = [];
+        const currentMessager = document.querySelector('.current-messager');
+        const getRooms = async () => {
+            const fetchRoom = await fetch('/api/getRooms');
+            const newRooms = await fetchRoom.json();
+            return (newRooms);
+        }
+        const loadRooms = async () => {
+            const userRooms = await getRooms();
+            const list = document.querySelector('.room-list');
+            list.innerHTML = '';
+            for (let userRoom of userRooms) {
+                const users = userRoom.split('_');
+                msgUser = users.filter(user => user !== myName)[0];
+                const button = document.createElement('button');
+                button.classList.add('chat-users');
+                button.value = msgUser;
+                button.innerText = `${msgUser}`;
+                list.appendChild(button);
+                button.addEventListener('click', function (e) {
+                    socket.emit('leave', room);
+                    messageContainer.innerHTML = '';
+                    let newRoom = createRoom(myName, button.value);
+                    if (button.value == 'General') newRoom = 'General_room';
+                    room = newRoom;
+                    socket.emit('joinRoom', { myName, room: newRoom });
+                    socket.emit('get-history', newRoom);
+                    const url = new URL(window.location.href);
+                    if (button.value !== 'General') {
+                        url.searchParams.set("user1", myName);
+                        url.searchParams.set("user2", button.value);
+                    }
+                    else {
+                        url.searchParams.set("user1", 'General');
+                        url.searchParams.set("user2", 'room');
+                    }
+                    window.history.pushState({}, "", url);
+
+                    currentMessager.innerText = button.value;
+                    currentMessager.value = button.value;
+                    document.querySelectorAll('.chat-users').forEach(btn => {
+                        btn.classList.remove('selected-user');
+                    })
+                    button.classList.add('selected-user');
+                })
+
+            }
+        }
+        const loadUsers = async () => {
+            const newRooms = await getRooms();
+            if (prevRooms && isEqualArrays(prevRooms, newRooms)) return;
+            prevRooms = newRooms;
+            console.log('new User joined');
+            loadRooms().then(() => {
+                const val1 = (user2 !== 'room') ? user2 : 'General';
+                let clickValue = val1 || 'General';
+                const btnClick = document.querySelector(`.chat-users[value="${clickValue}"]`);
+                btnClick && btnClick.click();
+            })
+        }
+    </script>
+    <script>
+        const socket = io();
+        const myName = '<%= name%>';
+        const messageForm = document.querySelector('#send-container');
+        const messageInput = document.querySelector('#message-input');
+        const messageContainer = document.querySelector('#message-container');
+        const searchUrl = window.location.search;
+        const params = new URLSearchParams(searchUrl);
+        const user1 = params.get("user1");
+        const user2 = params.get("user2");
+        let room = createRoom(user1, user2);
+        if (!user1 && !user2) room = 'General_room';
+        socket.emit('joinRoom', { myName, room });
+        socket.on('connect', async () => {
+            await loadUsers();
+        })
+        socket.on('new-user-info', async () => {
+            await loadUsers();
+        })
+        socket.on('chat-history', messages => {
+            messageContainer.innerHTML = '';
+            messages && messages.forEach(msg => {
+                if (msg.username === myName)
+                    appendeMsg(msg, 'my-message');
+                else {
+                    appendeMsg(msg);
+                }
+            });
+        })
+        socket.on('chat-message', async msg => {
+            if (msg.username === myName)
+                appendeMsg(msg, 'my-message');
+            else {
+                appendeMsg(msg);
+            };
+        })
+        messageForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const message = formatMsg(messageInput.value);
+            socket.emit('send-msg', message);
+            messageInput.value = '';
+            messageInput.focus = true;
+        })
+        const appendeMsg = (data, myMsg = '') => {
+            if (!data || !data.message.length) return;
+            const p = document.createElement('p');
+            p.innerHTML = `${data.message}<br><span style="font-size:10px">${data.time}</span>`;
+            const div = document.createElement('div');
+            if (myMsg) {
+                p.classList.add(myMsg);
+            }
+            div.appendChild(p);
+            div.classList.add('msg-content-container');
+            messageContainer.appendChild(div);
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        }
+        currentMessager.addEventListener('click',async()=>{
+            const userIdJson=await fetch(`api/get/${currentMessager.value}`);
+            const res=await userIdJson.json();
+            console.log(currentMessager.value+" "+ res.id);
+            if(res && res.id){
+                window.location.href=`/${res.id}/profile`;
+            }
+        })
+    </script>

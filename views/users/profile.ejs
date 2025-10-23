@@ -1,0 +1,108 @@
+<%- layout('/layout/boilerplate') %>
+
+    <div class="profile-container container py-4">
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="mb-0" style="text-transform: capitalize;">
+                    <%= currentUser.username===user.username?'My Profile' :`${user.username}\'s Profile` %>
+                </h1>
+            </div>
+        </div>
+
+        <div class="row align-items-center mb-4">
+            <div class="col-md-4 text-center">
+                <div data-popup-target="#popup-profile"
+                    class="<%= user.profilePic.url==='/images/person-icon.jpeg'?'':'popup-trigger' %>">
+                    <img src="<%=user.profilePic.url||'/images/person-icon.jpeg'%>" alt="profile" class="profile-pic">
+                </div>
+                <% if(user.equals(currentUser)) {%>
+                    <div class="hidden-container hide" id="popup-profile">
+                        <div class="pop-up shadow-lg">
+                            <div class="cancel close-icon fs-2 btn">
+                                &times;
+                            </div>
+                            <div class="content px-4 py-2">
+                                <p class="text-info fs-4">Profile Picture</p>
+                                <img src="<%=user.profilePic.url%>" alt="profile"
+                                    style="width: 200px;border-radius: 0.5em;" class="my-3">
+                                <% if(user.profilePic.url!='/images/person-icon.jpeg' ) {%>
+                                    <a href="/removeProfilePicture" class="btn btn-sm btn-danger mb-3">Delete
+                                        Profile</a>
+                                    <% } %>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+
+                        <p class="text-secondary" style="font-size: x-small;">Account created on <br>
+                            <%= user.created.toISOString().split('T')[0] %>
+                        </p>
+
+                        <% if(user.resume && user.resume.url) {%>
+                            <a href=" <%=user.resume.url %>" class="badge text-bg-info"
+                                style="text-decoration: none;">Download
+                                <br> Resume</a>
+                            <% } %>
+            </div>
+            <div class="col-md-8">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <th scope="row" style="width: 150px;">Name</th>
+                            <td>
+                                <%= (user.FullName || user.username || 'Not provided' ).trim() %>
+                            </td>
+                        </tr>
+                        <% if(role==='poster' ) {%>
+                            <tr>
+                                <th scope="row" style="width: 150px;">Company Name</th>
+                                <td>
+                                    <%= (user.company_name || 'Not provided' ).trim() %>
+                                </td>
+                            </tr>
+                            <% } %>
+                                <tr>
+                                    <th scope="row">DOB</th>
+                                    <td>
+                                        <%= user.DOB ? user.DOB.toISOString().split('T')[0] : 'Not provided' %>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Gender</th>
+                                    <td>
+                                        <%= user.gender || 'Not specified' %>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Role</th>
+                                    <td>
+                                        <%= user.role || 'Not specified' %>
+                                    </td>
+                                </tr>
+                                <% if(user.role==='seeker' ) {%>
+                                    <tr>
+                                        <th scope="row">Looking for:</th>
+                                        <td style="text-transform: capitalize;">
+                                            <%= user.job_category || 'General Jobs' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Skills</th>
+                                        <td>
+                                            <%= user.skills && user.skills.length ? user.skills.join(", ") : 'No skills added' %></td>
+                                </tr>
+                                <%}  %>
+                                
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+<% if(user.equals(currentUser)) {%>
+        <div class=" row">
+                                                <div class="col-4 offset-8">
+                                                    <a href="/editProfile" class="btn btn-warning">Edit Profile</a>
+                                                </div>
+            </div>
+            <% } %>
+        </div>

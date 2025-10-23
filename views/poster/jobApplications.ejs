@@ -1,0 +1,169 @@
+<% layout('/layout/boilerplate') %>
+    <style>
+        .left-fixed-container {
+            background-color: white;
+            position: fixed;
+            width: 40vw;
+            top: 74px;
+            left: 0;
+            bottom: 0;
+            box-sizing: border-box;
+            border-right: 2px solid black;
+        }
+
+        .applications-container {
+            margin-left: 40vw;
+            width: 59vw;
+            min-height: 90vh;
+            background-color: rgba(238, 234, 234, 0.877);
+        }
+
+        .applications-header {
+            position: fixed;
+            border-bottom: 2px solid black;
+            box-sizing: border-box;
+            height: 65px;
+            right: 0;
+            left: 40vw;
+            z-index: 1;
+        }
+
+        .reject-all-btn {
+            position: absolute;
+            top: 15px;
+            bottom: 20px;
+            right: 25px;
+        }
+
+        .display-applicants-container {
+            padding: 20px 10px;
+            box-sizing: border-box;
+            padding-top: 78px;
+        }
+
+        @media (max-width:800px) {
+            .left-fixed-container {
+                position: relative;
+                top: 0;
+                width: 100vw;
+                border: none;
+            }
+
+            .applications-container {
+                margin: auto;
+                width: 100vw;
+            }
+
+            .applications-header {
+                position: relative;
+                left: 0;
+            }
+        }
+    </style>
+
+    <div class="left-fixed-container">
+        <div class="card shadow-sm pb-4" style="height: 100vh;">
+            <div class="card-body">
+                <div class="row mt-2 mb-4">
+                    <div class="col-md-3">
+                        <a href="/poster/myJobs" class="btn btn-light fs-5">&laquo;Back</a>
+                    </div>
+                    <div class="col">
+                        <h2 class="card-title text-secondary text-start text-capitalize fw-bold mb-2">
+                            Job Description
+                        </h2>
+                    </div>
+                </div>
+                <h3 class="text-dark fw-bold mb-3">
+                    <%= job.title %> Required
+                </h3>
+
+                <div class="mb-3">
+                    <h5 class="fw-bold mb-1">Description</h5>
+                    <p class="text-muted mb-0">
+                        <%= job.description.substring(0,50) %>
+                    </p>
+                </div>
+
+                <div class="mb-3">
+                    <h5 class="fw-bold mb-2">Skills Required:</h5>
+                    <% for (let skill of job.req_skills) { %>
+                        <span class="badge bg-primary-subtle text-primary me-2 mb-1">
+                            <%= skill %>
+                        </span>
+                        <% } %>
+                </div>
+
+                <div class="mb-3">
+                    <h5 class="fw-bold d-inline">Pay per Hour:</h5>
+                    <span class="text-success fw-bold ms-2">$<%= job.pay %></span>
+                </div>
+
+                <div class="mb-3">
+                    <h5 class="fw-bold d-inline">Work Mode:</h5>
+                    <% if (job.mode.type==='remote' ) { %>
+                        <span class="text-primary ms-2">Remote (Work from Your Place)</span>
+                        <% } else { %>
+                            <span class="text-primary ms-2">On-site at <%= job.mode.address %></span>
+                            <% } %>
+                </div>
+
+                <div class="mb-3">
+                    <h5 class="fw-bold d-inline">Work Duration:</h5>
+                    <span class="text-secondary ms-2">
+                        <span class="text-dark fw-bold">From</span> 
+                        <%= job.duration?.durationFrom?.toISOString().split("T")[0] || 'Tentative' %>
+                         <span class="text-dark fw-bold">To</span> 
+                         <%= job.duration?.durationTo?.toISOString().split("T")[0]  %>
+                    </span>
+                </div>
+
+                <div class="border-top pt-3 mt-5">
+                    <p class="fw-bold text-capitalize mb-0">
+                        Is any Application approved:
+                        <span class="<%= job_app_length ? 'text-success' : 'text-danger' %>">
+                            <%= job_app_length ? `Yes, Approved ${job_app_length} Applicant` : "No, Approval Pending" %>
+                        </span>
+                    </p>
+                    <% if(!job_app_length){ %>
+                        <p class="fw-bold text-capitalize text-center mt-3">
+                            Would you Like to remove this job?<br>
+                            <a href="/poster/<%= job._id %>/deleteJob" class="btn btn-danger mt-3">
+                                Remove Job</a>
+                        </p>
+                        <% } else if(job.app_status=='open' ){%>
+                            <p class="fw-bold text-capitalize text-center mt-3">
+                                Stop Accepting Applications?<br>
+                                <button class="btn btn-info mt-3 popup-trigger"
+                                    data-popup-target="#popup-close-<%= job._id %>">
+                                    Close Applications</button>
+                            </p>
+                            <% } else{%>
+                                <p class="fw-bold text-capitalize text-center mt-3">
+                                    Stopped Accepting Applications<br>
+                                    <button disabled class="btn btn-danger mt-3">
+                                        Applications Closed</button>
+                                </p>
+                                <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hidden-container hide" id="popup-close-<%= job._id %>">
+        <div class="pop-up shadow-lg">
+            <div class="cancel close-icon fs-2 btn">
+                &times;
+            </div>
+            <div class="content px-4 py-3 text-center ">
+                <p class="text-danger fs-4 fw-semibold mb-5">Confirm to close Applications?</p>
+                <div class="d-flex justify-content-around gap-3">
+                    <button type="button" class="btn btn-danger px-4 cancel">No</button>
+                    <button class="btn btn-success px-4 status-button" id="close-<%= job._id %>">Yes</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <%-include('./iframes/applications.ejs') %>
+        <%-include('../iframes/iprofile.ejs') %>
+            <script src="/javascripts/poster/applicationStatusUpdate.js"></script>

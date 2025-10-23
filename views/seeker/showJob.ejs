@@ -1,0 +1,141 @@
+<%- layout('/layout/boilerplate') %>
+
+<div class="container my-4" style="width: 75vw;">
+    <div class="card shadow-lg" style="border-radius: 1rem; border: 1px solid #e0e0e0;">
+        
+        <!-- Job Header -->
+        <div class="row g-0 align-items-center bg-light p-4"
+             style="border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+            <div class="col-md-3 text-center">
+                <img src="<%= job.owner.profilePic.url || '/images/person-icon.jpeg'%>"
+                     alt="Company Logo"
+                     class="img-fluid border shadow-sm"
+                     style="width: 150px; height: 150px; object-fit: cover; border-width: 3px; border-style: solid; border-color: #dee2e6; border-radius: 50%;">
+            </div>
+            <div class="col-md-7">
+                <h2 class="fw-bold mb-0"><%= job.owner.company_name || job.owner.name %></h2>
+                <p class="text-muted mt-1">Job ID: <%= job._id %></p>
+            </div>
+            <% if(application && application.approval_status==='approved') {%>
+                <a href="/chat?user1=<%=currentUser.username%>&user2=<%= job.owner.username%>"
+                class="btn btn-dark col-md-2">
+                message
+            </a>
+                <% } %>
+        </div>
+        <!-- Job Details -->
+        <div class="card-body p-5">
+            <h3 class="fw-bold text-center mb-4 text-primary">
+                <%= job.title %> Required
+            </h3>
+
+            <div class="mb-4">
+                <h5 class="fw-bold">Description</h5>
+                <p class="text-muted"><%= job.description %></p>
+            </div>
+
+            <div class="mb-3">
+                <h5 class="fw-bold d-inline">Skills Required:</h5>
+                <% for (let skill of job.req_skills) { %>
+                    <span class="badge bg-primary fs-6 me-1"><%= skill %></span>
+                <% } %>
+            </div>
+
+            <div class="mb-3">
+                <h5 class="fw-bold d-inline">Pay per Hour:</h5>
+                <p class="fs-5 text-success d-inline fw-bold">$<%= job.pay %></p>
+            </div>
+
+            <div class="mb-3">
+                <h5 class="fw-bold d-inline">Work Mode:</h5>
+                <% if (job.mode.type === 'remote') { %>
+                    <p class="text-info d-inline fs-5 fw-semibold">Remote (Work from Your Place)</p>
+                <% } else { %>
+                    <p class="text-info d-inline fs-5 fw-semibold">
+                        On-site at <%= job.mode.address %>
+                    </p>
+                <% } %>
+            </div>
+
+            <div class="mb-3">
+                <h5 class="fw-bold d-inline">Work Duration:</h5>
+                <p class="text-secondary d-inline fs-5 fw-semibold">
+                  <span class="text-dark fw-bold">From</span> 
+                        <%= job.duration?.durationFrom?.toISOString().split("T")[0] || 'Tentative' %>
+                         <span class="text-dark fw-bold">To</span> 
+                         <%= job.duration?.durationTo?.toISOString().split("T")[0]  %>
+                </p>
+            </div>
+        </div>
+
+        <!-- Application Status -->
+        <div class="text-center">
+            <% if (application) { %>
+                <p class="text-dark fs-5 fw-bold" style="text-transform: capitalize;">
+                    Application Status:
+                    <span 
+                        <% if (application.approval_status !== 'pending') { %>
+                            class="<%= application.approval_status === 'approved' ? 'text-success' : 'text-danger' %>"
+                        <% } else { %>
+                            class="text-secondary"
+                        <% } %>>
+                        <%= application.approval_status %>
+                    </span>
+                </p>
+            <% } %>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="card-footer bg-white text-center py-4 d-flex justify-content-between"
+             style="border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+            <a href="/seeker/getJobs" class="btn btn-lg btn-warning px-5 shadow-sm" style="border-radius: 0.5rem;">
+                Browse all Jobs
+            </a>
+            <p class="text-muted" data-created="<%= job.created %>">Posted </p>
+
+            <% if (!application && job.app_status === 'open') { %>
+                <button data-popup-target="#popup-job-apply" class="btn btn-lg btn-success px-5 shadow-sm popup-trigger" style="border-radius: 0.5rem;">
+                    Apply Now
+                </button>
+            <% } else if(application){%>
+                <button class="btn btn-lg btn-primary px-5 shadow-sm fw-bold" style="border-radius: 0.5rem;" disabled>
+                    Applied
+                </button>
+                <% }else{ %>
+                <button class="btn btn-lg btn-danger px-5 shadow-sm fw-bold" style="border-radius: 0.5rem;" disabled>
+                    Application Closed
+                </button>
+            <% } %>
+        </div>
+
+        <!-- Application Popup -->
+        <div class="hidden-container hide" id="popup-job-apply">
+            <div class="pop-up shadow-lg">
+                <div class="cancel close-icon fs-2 btn">&times;</div>
+                <form action="/seeker/<%= job._id %>/applyJob" method="POST" class="px-4 py-2 content">
+                    <div>
+                        <h2 class="text-primary py-3">Application for <%= job.title %> job</h2>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" name="user_description" id="floatingTextarea2" style="height: 100px"></textarea>
+                        <label for="floatingTextarea2">Reason for Applying (optional)</label>
+                    </div>
+
+                    <div class="form-check my-3">
+                        <input class="form-check-input terms" type="checkbox" id="checkChecked" name="acceptTerms" value="true" checked>
+                        <label class="form-check-label" for="checkChecked">
+                            Agree to share my profile with potential employers
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <button type="button" class="btn btn-danger cancel col-md-3 offset-1">Cancel</button>
+                        <button type="submit" class="btn btn-primary col-md-3 offset-4 apply">Apply</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,58 @@
+<% layout('/layout/boilerplate') %>
+    <div class="container-fluid">
+        <% if(!posted) {%>
+            <p class="warning-display text-danger bg-light border border-danger
+             fs-5 fw-semibold text-center py-4 px-3 shadow-sm">
+                No Jobs Posted.
+            </p>
+            <% } %>
+                <div class="m-4 d-flex flex-wrap justify-content-around gap-3 ">
+                    <% jobs.forEach((job,i)=> { %>
+                        <div class="card text-center col-md-3 my-3" style="flex-basis: 32%;">
+                            <div class="card-header" data-created="<%= job.created.toISOString() %>">
+                                Posted
+                            </div>
+                            <div class="card-body ">
+                                <h5 class="card-title pb-2">
+                                    <%= job.title %>
+                                </h5>
+                                <% if(job.appCount) {%>
+                                    <p class="fs-6 fw-bold">
+                                        Application Status:
+                                        <span class="<%= job.applicant=='approved'?'text-success':'text-secondary' %>">
+                                            <%= job.appLength? job.appLength:'' %>
+                                                <%= job.applicant %>
+                                        </span>
+                                    </p>
+                                    <% }else {%>
+                                        <p class="fs-6 fw-bold text-danger">No Applications</p>
+                                        <% } %>
+                                            <% if(job.app_status==='closed' ) {%>
+                                                <p class="fs-6 fw-bold py-0">
+                                                    <span class="text-danger">Applications Closed</span>
+                                                </p>
+                                                <% }else {%>
+                                                    <p class="fs-6 fw-bold py-0">
+                                                        <span class="text-info">Applications Open</span>
+                                                    </p>
+                                                    <% } %>
+                            </div>
+                            <div class="card-footer text-body-secondary d-flex justify-content-evenly">
+                                <% if(job.appCount) {%>
+                                    <a href="/poster/<%= job._id %>/applications" class="btn
+                                        <%= job.app_status=='closed' && job.applicant==='pending'.trim()?
+                                        'btn-warning':'btn-primary'
+                                        %>
+                                        ">
+                                        View Applications
+                                    </a>
+                                    <% }else {%>
+                                        <a href="/poster/<%= job._id %>/deleteJob" class="btn btn-danger">
+                                            Delete Job
+                                        </a>
+                                        <% } %>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
+    </div>

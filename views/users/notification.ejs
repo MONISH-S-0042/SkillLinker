@@ -1,0 +1,23 @@
+<%- layout('/layout/boilerplate.ejs') %>
+    <div class="container rounded py-4" style="background-color: rgba(255, 255, 255, 0.553);min-height: 90vh;">
+        <% for(let notification of notifications) {%>
+            <div class="card my-2 mx-2">
+                <div class="card-header d-flex justify-content-between">
+                    <div data-created="<%= notification.created %>">
+                    </div>
+                    <a href="/deleteNotification/<%= notification._id %>" class="btn" style="background: none;color: rgb(232, 54, 54);">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="card-body d-flex justify-content-between">
+                    <p class="py-0 my-0 text-dark">
+                        <%= notification.info %>
+                    </p>
+                    <div>
+                        <a href="/seeker/<%= notification.ref_job %>/jobDesc" class="btn btn-info">view job</a>
+                        <a href="/chat" class="btn btn-dark">message</a>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+    </div>

@@ -1,0 +1,63 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary nav-pills nav fill py-3 fixed-top vw-100 z-1">
+    <div class="container-fluid ">
+        <a class="navbar-brand fs-4 fw-bold" href="/">Skill Linker</a>
+
+        <a href="/notification"
+            style="text-decoration: none; color: black; font-size: 30px;margin-left: 10px;background: none;">
+            <i class="fa-solid fa-bell"></i>
+        </a>
+        <a href="/chat" class="nav-link px-3 mx-2 homePage btn btn-light text-dark" style="text-decoration: none;font-weight: bold;">Chat</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse " id="navbarText">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 px-4 align-items-center">
+                <li class="nav-item mx-3">
+                    <a class="nav-link px-2" href="/home">Home</a>
+                </li>
+                <% if(!currentUser){ %>
+                    <li class="nav-item mx-3">
+                        <a class="nav-link px-2" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item mx-3">
+                        <a class="nav-link px-2" href="/register">Register</a>
+                    </li>
+                    <%} else{%>
+                        <% if(role==='seeker' ) {%>
+                            <li class="nav-item mx-3">
+                                <a class="nav-link px-2 homePage" aria-current="page" href="/seeker/getJobs">Jobs</a>
+                            </li>
+                            <% }else {%>
+                                <li class="nav-item mx-3">
+                                    <a class="nav-link px-2 homePage" aria-current="page" href="/">Applicants</a>
+                                </li>
+                                <% } %>
+                                    <li class="nav-item mx-3">
+                                        <a class="nav-link px-2" href="/<%= currentUser._id %>/profile">Profile</a>
+                                    </li>
+                                    <li class="nav-item mx-3 popup-trigger" data-popup-target="#popup-logout">
+                                        <span class="nav-link px-2 btn">logout</span>
+                                    </li>
+
+                                    <% } %>
+            </ul>
+
+        </div>
+</nav>
+<div class="hidden-container hide" id="popup-logout">
+    <div class="pop-up shadow-lg">
+        <div class="cancel close-icon fs-2 btn">
+            &times;
+        </div>
+        <div class="content px-4 py-3 text-center">
+            <p class="text-info fs-4 fw-semibold mb-5">Confirm Logout?</p>
+            <div class="d-flex justify-content-center gap-3">
+                <button type="button" class="btn btn-danger px-4 cancel">No</button>
+                <a href="/logout" class="btn btn-success px-4">Yes</a>
+            </div>
+        </div>
+
+    </div>
+</div>

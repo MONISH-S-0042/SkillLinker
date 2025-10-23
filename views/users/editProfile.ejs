@@ -1,0 +1,84 @@
+<%- layout('/layout/boilerplate.ejs') %>
+    <div class="container d-flex  justify-content-center align-items-center my-5">
+        <div class="row flex-fill">
+            <div class="col-md-6 offset-md-3">
+                <div class="card shadow p-5">
+                    <h1>Edit Profile</h1>
+                    <form action="/editProfile" method="post" class="validate-form" enctype="multipart/form-data"
+                        novalidate>
+                        <div class="mb-3">
+                            <label class="form-label" for="name">Full Name:</label>
+                            <input class="form-control" type="text" name="name" id="name"
+                                value="<%=user.FullName|| user.username%>">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="email">Email:</label>
+                            <input class="form-control" type="text" name="email" id="email" value=<%=user.email %>
+                            disabled>
+                        </div>
+                        <% if(role==='poster' ) {%>
+                            <div class="mb-3">
+                                <label class="form-label" for="company_name">Company Name:</label>
+                                <input class="form-control" type="text" name="company_name" id="company_name"
+                                    value=<%=user.company_name %>>
+                            </div>
+                            <% } %>
+                                <div class="mb-3">
+                                    <label class="form-label" for="profilePic">Change Profile Picture:</label>
+                                    <input class="form-control" type="file" name="profilePic" id="profilePic"
+                                        placeholder="Select Picture" accept="image/jpeg,image/jpg,image/png">
+                                </div>
+                                <% if(user.gender!=='Male' && user.gender!=='Female' ) {%>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="gender">Gender:</label>
+                                        <Select class="form-control" name="gender" id="gender">
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
+                                        </Select>
+                                        <div class="valid-feedback">Accepted</div>
+                                    </div>
+                                    <% } %>
+                                        <% if(user.role==='seeker' ) {%>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="skills">Skills:</label>
+                                                <input class="form-control" type="text" name="skillsStr" id="skills"
+                                                    value="<%= user.skills ? user.skills.toString() : '' %>"
+                                                    placeholder="Add Skills" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="job_category">Job Category:</label>
+                                                <input class="form-control" type="text" name="job_category"
+                                                    id="job_category"
+                                                    value="<%= user.job_category!=='general' ? user.job_category : '' %>"
+                                                    placeholder="What Job are you currently Looking for?" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="resume">Upload Resume:</label>
+                                                <input class="form-control" type="file" name="resume" id="resume"
+                                                    accept=".pdf">
+                                            </div>
+                                            <% } %>
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="DOB">DOB:</label>
+                                                    <input class="form-control" type="date" name="DOB" id="DOB"
+                                                        value="<%= user.DOB?.toISOString().split('T')[0]||'' %>"
+                                                        required>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-5">
+                                                        <a href="/<%= currentUser._id %>/profile"> <button type="button"
+                                                                class="btn btn-success">Back
+                                                                to
+                                                                Profile</button></a>
+                                                    </div>
+                                                    <div class="col-3 offset-4">
+                                                        <button class="btn btn-warning">Submit</button>
+                                                    </div>
+                                                </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>

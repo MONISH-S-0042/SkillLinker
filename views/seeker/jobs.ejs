@@ -1,0 +1,47 @@
+<%- layout('/layout/boilerplate') %>
+    <!-- Filter nav -->
+    <div class="job-filtert bg-secondary d-flex align-items-center 
+    justify-content-start py-3 px-4 shadow-sm gap-4">
+        <!-- Job Selection -->
+        <div class="filter-container">
+            <select id="job-select" class="form-select bg-light text-dark">
+                <option value="recommended">Recommended Jobs</option>
+                <option value="allJobs">See all Jobs posted</option>
+                <option value="applied">Applied status</option>
+                <option value="category">Filter Jobs By Category</option>
+            </select>
+        </div>
+
+        <!-- Applied Status -->
+        <div class="applied-container">
+            <select id="job-applied" class="form-select bg-light text-dark">
+                <option value="all">All</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+                <option value="pending">Pending</option>
+            </select>
+        </div>
+
+        <!-- Search Category -->
+        <div class="category-container">
+            <div class="search-job-category d-flex align-items-center gap-2">
+                <label for="search-category" class="fw-semibold text-light">Category:</label>
+                <input type="text" id="search-category" class="form-control bg-light text-dark"
+                    placeholder="Search job..." required>
+            </div>
+        </div>
+    </div>
+
+
+    <p class="warning-display text-danger bg-light border border-danger rounde
+    d fs-5 fw-semibold text-center py-4 px-3 shadow-sm" style="display: none;">
+        <!-- Warning message will appear here -->
+    </p>
+
+
+
+    <div class="m-4 d-flex flex-wrap justify-content-around gap-3 all-job-container">
+        <!-- From allJobsApi.js ->Seekers -->
+    </div>
+
+    <script src="/javascripts/seeker/allJobsApi.js"></script>

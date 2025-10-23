@@ -1,0 +1,107 @@
+<div class="applications-container">
+    <p class="applications-header fs-2 text-center fw-bold text-secondary vw-60 bg-white">Applications
+        <% if(job_app_length && pend_apps) {%>
+            <button class="btn btn-sm btn-danger reject-all-btn popup-trigger"
+            data-popup-target="#popup-reject-all-<%= job._id %>">
+            Reject Others</button>
+            <% } %>
+    </p>
+    <div class="display-applicants-container">
+        <% for(let application of applications) {%>
+            <div class="card app-card card-wrapper hover my-2 mx-3 close-<%= application.applicant._id %>">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 btn btn-light fw-bold text-decoration-underline popup-trigger"
+                        data-popup-target="#profile-<%= application.applicant._id %>">
+                        Name: <%= application.applicant.FullName || application.applicant.username %>
+                    </h5>
+                    <% if(application.approval_status!=='approved' ) {%>
+                        <button type="button" data-close-class=".close-<%= application.applicant._id %>"
+                            class="align-self-end close-button btn btn-light fw-bold">
+                            &times;</button>
+                        <% }else {%>
+                            <a href="/chat?user1=<%=currentUser.username %>&user2=<%= application.applicant.username %>" class="btn btn-dark">
+                                message
+                            </a>
+                            <% } %>
+                </div>
+
+                <div class="row py-2">
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Skills</h5>
+                            <p class="card-text">
+                                <%= application.applicant.skills?.join(', ') %></p>
+                        </div>
+                        </div>
+                        <div class="col-md-4 d-flex flex-row justify-content-evenly align-items-end">
+                                <% if(application.approval_status===' pending'.trim()) {%>
+                                    <button type="button"
+                                        class="btn btn-light text-danger fw-bold status-button close-button"
+                                        id="dec-<%= application._id %>"
+                                        data-close-class=".close-<%= application.applicant._id %>">
+                                        &times; Reject</button>
+                                    <button data-popup-target="#Accept-<%= application.applicant._id %>" type="button"
+                                        class="popup-trigger btn btn-light text-success fw-bold">
+                                        &check; Accept</button>
+                                    <% } else if(application.approval_status==='approved' .trim() ){%>
+                                        <p class="badge bg-success fs-5">
+                                            &check; <%= application.approval_status %>
+                                        </p>
+                                        <% } %>
+
+                        </div>
+                    </div>
+                    <div class="text-muted fs-6 mb-0 card-footer text-center" data-created="<%= application.applied %>">
+                        Applied
+                    </div>
+                </div>
+                <!-- Hidden container for approval -->
+                <div class="hidden-container hide" id="Accept-<%= application.applicant._id %>">
+                    <div class="pop-up shadow-lg">
+                        <p class="fs-3 fw-bold">Accept
+                            <%= application.applicant.FullName || application.applicant.username %>' s Application
+                        </p>
+                        <% if(application.user_description) {%>
+                            <p class="fs-5 fw-bold text-captilaize">User's Feedback</p>
+                            <p class="form-control" style="height: 100px">
+                                <%= application.user_description %>...
+                            </p>
+
+                            <% } %>
+                                <div class="form-check my-3">
+                                    <input class="form-check-input terms" type="checkbox"
+                                        id="checkChecked<%= application.applicant._id %>" name="acceptTerms"
+                                        value="true" checked>
+                                    <label class="form-check-label" for="checkChecked<%= application.applicant._id %>">
+                                        I agree to hire this employee to complete my work
+                                    </label>
+                                </div>
+
+                                <div class="row">
+                                    <button type="button"
+                                        class="btn btn-danger cancel col-md-3 offset-1">Cancel</button>
+                                    <button class="btn btn-primary col-md-3 offset-4 apply status-button cancel"
+                                        id="acc-<%= application._id %>">Accept</button>
+                                </div>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+    </div>
+    <!-- Hidden popup for rejection -->
+    <div class="hidden-container hide" id="popup-reject-all-<%= job._id %>">
+        <div class="pop-up shadow-lg">
+            <div class="cancel close-icon fs-2 btn">
+                &times;
+            </div>
+            <div class="content px-4 py-3 text-center">
+                <p class="text-danger fs-4 fw-semibold mb-5">Confirm to reject other applications?</p>
+                <div class="d-flex justify-content-around gap-3">
+                    <button type="button" class="btn btn-sm btn-info px-4 cancel">No</button>
+                    <button id="rejectAll-<%= job._id %>" class="btn btn-sm btn-danger px-4 status-button">Yes, reject <br>
+                        others</button>
+                </div>
+            </div>
+
+        </div>
+    </div>

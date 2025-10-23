@@ -1,0 +1,18 @@
+.profile-container {
+    background-color: white;
+    display: block;
+    margin: 30px auto;
+    max-width: 600px;
+    border: 2px solid whitesmoke;
+    padding: 1em;
+    border-radius: 1em;
+}
+
+.profile-pic {
+    border-radius: 50%;
+    border: 2px solid black;
+    height: 100px;
+    width: 100px;
+    margin: 10px auto;
+    object-fit: cover;
+}

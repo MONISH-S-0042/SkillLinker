@@ -1,0 +1,79 @@
+<!-- Applicant Profile -->
+<% for (let user of users) { %>
+    <div class="hidden-container hide" id="profile-<%= user._id %>">
+        <div class="pop-up shadow-lg">
+            <div class="cancel close-icon fs-2 btn">&times;</div>
+            <div class="profile-container" style="border: none;">
+                <!-- Profile Header -->
+                <div class="row mb-4">
+                    <div class="col">
+                        <h1 class="mb-0 text-decoration-underline">
+                            <%= user.FullName || user.username %>' s Profile
+                        </h1>
+                    </div>
+                </div>
+
+                <!-- Profile Section -->
+                <div class="row align-items-center mb-4">
+                    <!-- Profile Picture & Info -->
+                    <div class="col-md-4 text-center">
+                        <div data-popup-target="#popup-profile"
+                            id="<%= user.profilePic.url === '/images/person-icon.jpeg' ? '' : 'popup-trigger' %>">
+                            <img src="<%= user.profilePic.url || '/images/person-icon.jpeg' %>"
+                                alt="profile" class="profile-pic">
+                        </div>
+
+                        <p class="text-secondary small mb-1">
+                            Account created on <br>
+                            <%= user.created.toISOString().split('T')[0] %>
+                        </p>
+
+                        <% if (user.resume && user.resume.url) { %>
+                            <a href="<%= user.resume.url %>"
+                                class="badge text-bg-info text-decoration-none">
+                                Download <br> Resume
+                            </a>
+                            <% } %>
+                    </div>
+
+                    <!-- Profile Details -->
+                    <div class="col-md-8">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                                <tr>
+                                    <th scope="row" style="width: 150px;">Name</th>
+                                    <td>
+                                        <%= (user.FullName || user.username
+                                            || 'Not provided' ).trim() %>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">DOB</th>
+                                    <td>
+                                        <%= user.DOB ?
+                                            user.DOB.toISOString().split('T')[0] : 'Not provided' %>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Gender</th>
+                                    <td>
+                                        <%= user.gender || 'Not specified' %>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Skills</th>
+                                    <td>
+                                        <%= user.skills && user.skills.length ?
+                                            user.skills.join(", ") 
+                                                : 'No skills added' %>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+<% } %>
