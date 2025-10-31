@@ -1,9 +1,33 @@
 <%- layout('/layout/boilerplate') %>
-<div class="container-fluid d-flex justify-content-center gap-3 m-3">
-    <div class="d-flex">
-        <a href="/seeker/getJobs" class="badge bg-dark fs-3">Jobs</a>
-    </div>
-    <div class="d-flex">
-        <a href="/seeker/myApplications" class="badge bg-dark fs-3">My applications</a>
-    </div>
+
+<div class="container-fluid d-flex flex-column align-items-center justify-content-center text-center min-vh-100">
+
+  <!-- Hero Section -->
+  <div class="hero-section p-4 mt-5">
+    <h1 class="display-4 fw-bold text-light mb-3">Welcome to <span class="brand-text">Skill Linker</span></h1>
+    <p class="lead text-light-50 mb-4 fw-bold">Connect with opportunities that match your skills and goals.</p>
+    <a href="/seeker/getJobs" class="btn btn-outline-light btn-lg px-5 py-2 shadow-sm">
+      <i class="fa-solid fa-briefcase me-2"></i>Browse Jobs
+    </a>
+  </div>
+
+  <!-- Quick Info Section -->
+<div class="info-cards d-flex flex-wrap justify-content-center gap-4 mt-5">
+  <div class="custom-card p-3 text-center">
+    <i class="fa-solid fa-user-tie fa-2x mb-3 icon"></i>
+    <h5>For Job Seekers</h5>
+    <p>Find roles that suit your skills and apply easily.</p>
+  </div>
+  <div class="custom-card p-3 text-center">
+    <i class="fa-solid fa-building fa-2x mb-3 icon"></i>
+    <h5>For Employers</h5>
+    <p>Post jobs and connect with talented candidates.</p>
+  </div>
+  <div class="custom-card p-3 text-center">
+    <i class="fa-solid fa-handshake fa-2x mb-3 icon"></i>
+    <h5>For Everyone</h5>
+    <p>A community built to bridge skills and opportunities.</p>
+  </div>
+</div>
+
 </div>

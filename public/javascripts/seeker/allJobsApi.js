@@ -45,6 +45,7 @@ const sortRecommended = (jobs) => {
         if (gapA !== gapB) return gapA - gapB;
         return b.matchedSkills - a.matchedSkills;
     });
+    return jobs;
 }
 const createJobCard = (job) => {
     const outerDiv = document.createElement('div');
@@ -150,11 +151,8 @@ const showAppliedJobs = async (approvalStatus) => {
 const showCategoryJobs = async (category) => {
     let { categoryJobs } = await getList(category);
     categoryJobs = categoryJobs.filter(job => job.approval_status === null);
-    if(!category){
-    sortRecommended(categoryJobs);
-    }
     if (categoryJobs.length) {
-        addJobsToDOM(categoryJobs);
+        addJobsToDOM(sortRecommended(categoryJobs));
     }
     else {
         warning.style.display = "block";

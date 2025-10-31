@@ -1,12 +1,26 @@
 <%- layout('/layout/boilerplate') %>
-<div class="container-fluid d-flex justify-content-center gap-3 m-3">
-    <div class="d-flex">
-        <a href="/poster/addJob" class="badge bg-dark fs-3">Post a new job</a>
-    </div>
-    <div class="d-flex">
-        <a href="/poster/myJobs" class="badge bg-dark fs-3">My Jobs</a>
-    </div>
-    <div class="d-flex">
-        <a href="/poster/applications" class="badge bg-dark fs-3">All Applications</a>
-    </div>
+
+<div class="hero-section p-4 mt-5 text-center">
+  <h1 class="display-4 fw-bold text-light mb-3">
+    Welcome to <span class="brand-text">Skill Linker</span>
+  </h1>
+  <p class="lead text-light-50 mb-4 fw-bold">
+    Provide opportunities that match your needs and goals.
+  </p>
+</div>
+
+<div class="poster-container d-flex flex-wrap justify-content-center align-items-center gap-4 mt-1">
+
+  <a href="/poster/addJob" class="poster-card text-decoration-none">
+    <i class="fa-solid fa-plus-circle fa-2x mb-3"></i>
+    <h5 class="fw-bold mb-1">Post a New Job</h5>
+    <p class="small">Create and share job openings easily.</p>
+  </a>
+
+  <a href="/poster/myJobs" class="poster-card text-decoration-none">
+    <i class="fa-solid fa-briefcase fa-2x mb-3"></i>
+    <h5 class="fw-bold mb-1">My Jobs</h5>
+    <p class="small">View and manage your posted jobs.</p>
+  </a>
+
 </div>

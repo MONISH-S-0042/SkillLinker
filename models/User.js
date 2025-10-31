@@ -3,9 +3,13 @@ const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 const { cloudinary } = require('../cloudinary/index')
 const connect = {
-    email: {
+    email: {// this is for contact purpose
         type: String,
-        lowercase: true
+        lowercase: true,
+        default: function () {
+            return this.email;
+        },
+        required: true
     },
     github: {
         type: String,

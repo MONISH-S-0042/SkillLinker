@@ -82,24 +82,24 @@ module.exports.allJobList = async (req, res) => {
     }
     filteredJobs = filteredJobs.filter(job => (job.app_status === 'open' || job.approval_status));
     let categoryJobs;
+    filteredJobs.forEach(job => {
+        job.matchedSkills = 0;
+        user.skills.forEach(skill => {
+            if (job.req_skills.includes(skill)) {
+                job.matchedSkills++;
+            }
+        })
+        if (user.skills[0].toLowerCase() === 'none') {
+            job.matchedSkills++;
+        }
+    });
     if (category) {
         categoryJobs = filteredJobs.filter(job => (
-            new RegExp(category, 'i').test(job.category) || new RegExp(category, 'i').test(job.title)
+            new RegExp(category, 'i').test(job.category)
         ));
     }
     else {
         category = user.job_category;
-        filteredJobs.forEach(job => {
-            job.matchedSkills = 0;
-            user.skills.forEach(skill => {
-                if (job.req_skills.includes(skill)) {
-                    job.matchedSkills++;
-                }
-            })
-            if (user.skills[0].toLowerCase() === 'none') {
-                job.matchedSkills++;
-            }
-        });
         categoryJobs = filteredJobs.filter(job => {
             return job.app_status === 'open' && job.matchedSkills > 0;
         });
