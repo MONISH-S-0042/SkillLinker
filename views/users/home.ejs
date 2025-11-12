@@ -1,5 +1,13 @@
 <%- layout('/layout/boilerplate') %>
-    <h1>Homepage</h1>
+    <div class="hero-section p-4 mt-5 text-center">
+        <h1 class="display-4 fw-bold text-light mb-3">
+            Welcome to <span class="brand-text">Skill Linker</span>
+        </h1>
+        <p class="lead text-light-50 mb-4 fw-bold">
+            Login to Start your Journey
+            <a href="/login">Login</a>
+        </p>
+    </div>
     <script>
         sessionStorage.clear();
         localStorage.removeItem('filter-value');

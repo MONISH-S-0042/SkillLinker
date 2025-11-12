@@ -34,7 +34,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
 app.set('public', path.join(__dirname, '/public'));
 const dbUrl = 'mongodb://127.0.0.1:27017/skill-linker'
-mongoose.connect(dbUrl)
+mongoose.connect(process.env.DB_URL || dbUrl)
     .then(() => {
         console.log("Mongo Connection open");
     })
@@ -76,7 +76,7 @@ passport.deserializeUser(User.deserializeUser());
 let username;
 app.use(async (req, res, next) => {
     res.locals.currentUser = req.user;
-    username =req.user && req.user.username;
+    username = req.user && req.user.username;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     res.locals.role = req.user ? req.user.role : null;
@@ -96,17 +96,17 @@ app.use('/api', apiRoutes);
 app.use('/', userRoutes);
 
 
-app.get('/api/get/:username',async(req,res)=>{
-    const {username}=req.params;
-    const user=await User.findOne({username});
+app.get('/api/get/:username', async (req, res) => {
+    const { username } = req.params;
+    const user = await User.findOne({ username });
     res.json({
-        id:user?._id
+        id: user?._id
     });
 })
 app.get('/api/getRooms', async (req, res) => {
     const rooms = await Chat.find({
         $or: [
-            {room: { $regex: req.user.username }},
+            { room: { $regex: req.user.username } },
             { room: "General_room" }
         ],
     }, { room: 1 });
