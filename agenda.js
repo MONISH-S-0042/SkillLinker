@@ -1,7 +1,7 @@
 const Agenda = require('agenda');
 const { Job } = require('./models/Job');
 const agenda = new Agenda({
-    db: { address: 'mongodb://127.0.0.1:27017/skill-linker', collection: 'agendaJobs' },
+    db: { address:process.env.DB_URL || 'mongodb://127.0.0.1:27017/skill-linker', collection: 'agendaJobs' },
     processEvery: '1 minute'
 });
 
