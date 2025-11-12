@@ -33,8 +33,8 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
 app.set('public', path.join(__dirname, '/public'));
-const dbUrl = 'mongodb://127.0.0.1:27017/skill-linker'
-mongoose.connect(process.env.DB_URL || dbUrl)
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/skill-linker'
+mongoose.connect(dbUrl)
     .then(() => {
         console.log("Mongo Connection open");
     })
