@@ -1,5 +1,4 @@
 require('dotenv').config();
-require('./agenda');
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -40,6 +39,7 @@ mongoose.connect(dbUrl, {
 })
 .then(() => console.log("Mongo Connection open"))
 .catch((e) => console.log("Mongo error->", e));
+require('./agenda');
 
 
 const store = new MongoStore({
